@@ -1,8 +1,6 @@
 import RPi.GPIO as gpio
-import sys, termios, tty, os, time
-import pygame
+import sys, termios, tty, os, time, thread, pygame #import libs
 import movement, addons, distance #import local
-from threading import Thread
 
 os.system("amixer set PCM 100") #set speaker sound to 100
 
@@ -19,7 +17,7 @@ def getch():
     return ch
 
 button_delay = 0
-exec_time = 0.3
+exec_time = 0.2
 
 while True:
     char = getch()
@@ -52,6 +50,7 @@ while True:
     elif (char == "s"):
         print("backward")
         movement.reverse(exec_time)
+        thread.start_new_thread( movement.reverse, (exec_time, ) )
         time.sleep(button_delay)
 
     elif (char == "y"):
@@ -71,8 +70,10 @@ while True:
 
     elif (char == "h"):
         print("Horn...")
-        addons.playsound("sounds/horn1.ogg")
+        thread.start_new_thread( addons.playsound, ("sounds/horn1.ogg", ) )
+        #addons.playsound("sounds/horn1.ogg")
 
     elif (char == "i"):
-        print("Ich Cream Truck Mode")
-        addons.playsound("sounds/icecream.ogg")
+        print("Ice Cream Truck Mode")
+        thread.start_new_thread( addons.playsound, ("sounds/icecream.ogg", ) )
+        #addons.playsound("sounds/icecream.ogg")
